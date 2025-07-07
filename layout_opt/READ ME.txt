@@ -1,0 +1,10 @@
+generate_structure: generates the potential network components, based on the number of users (n.u). Creates a file "struct#users". Only needs to be run once per # of users.
+	generate_mdpts: generates all potential midpoints for n.u users
+	pair_pts: creates list of valid connections between boiler, users, and midpoints
+
+
+
+create_map: allows user to create map for the particular case to be examined. Creates a file "map#user#"
+	locate_mdpts: finds the geographic locations of the midpoints based on the user locations
+
+run_bnb: run the two branch and bound algorithms. 

@@ -1,4 +1,7 @@
+function generate_structure(nu)
 %GENERATE_STRUCTURE  Generates all potential network components.
+%
+%   FUNCTION_NAME(in1, in2, ...)
 %
 %   DESCRIPTION:
 %   Generates all the potential network components, based on the number of
@@ -6,16 +9,14 @@
 %   per # of users. Gives midpoints and the pairs of midpoints that work
 %   together.
 %
-%   DEPENDENCIES: generate_mdpts, pair_pts.
+%   INPUTS:
+%       in1  - Description of input 1 (type, format, units if applicable)
 %
-%   SEE ALSO: create_map
-
-%%
-clc, clear, close all
+%   DEPENDENCIES: generate_mdpts, pair_pts.
 
 %% Set Number of users
 
-n.u = 4;
+n.u = nu;
 
 %% Generate Layouts
 [mdpts, users_in_mdpt] = generate_mdpts(n.u);    % recursively generate all potential midpoints
@@ -26,4 +27,4 @@ n.u = 4;
 filename = ['struct', num2str(n.u), 'users'];
 save(filename, 'n','mdpts','users_in_mdpt','pairs','users_in_node2')
 
-%%
+end

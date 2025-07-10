@@ -1,8 +1,6 @@
 function generate_structure(nu)
 %GENERATE_STRUCTURE  Generates all potential network components.
 %
-%   FUNCTION_NAME(in1, in2, ...)
-%
 %   DESCRIPTION:
 %   Generates all the potential network components, based on the number of
 %   users (n.u). Creates a file "struct#users". Only needs to be run once
@@ -10,7 +8,7 @@ function generate_structure(nu)
 %   together.
 %
 %   INPUTS:
-%       in1  - Description of input 1 (type, format, units if applicable)
+%       nu  - Number of users in the system
 %
 %   DEPENDENCIES: generate_mdpts, pair_pts.
 

@@ -8,7 +8,7 @@
 %
 %   DEPENDENCIES: generate_mdpts, pair_pts.
 %
-%   SEE ALSO:
+%   SEE ALSO: create_map
 
 %%
 clc, clear, close all

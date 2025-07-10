@@ -10,26 +10,34 @@
 %
 %   SEE ALSO: generate_structure
 
-%%
+%% Setup
 clc, clear, close all
+pth = pwd;
+addpath(fullfile(pth, 'structure'));
+%% Get System Parameters
+n.u = 8;
 
-%% Load System Parameters
-
-load('struct8users.mat')
+struct_file = sprintf('%sstruct%dusers.mat', fullfile(pth, 'structure\'),n.u);
+if isfile(struct_file)
+    load(struct_file)
+else
+    generate_structure(n.u)
+    load(struct_file)
+end
 
 %% Map
 
 % Parma case study
-grabit('ParmaMap.jpg');
-disp('Press enter once points are selected')
-pause;
-map = Data001;
-map = map(2:end,:)-map(1,:);
+% grabit('ParmaMap.jpg');
+% disp('Press enter once points are selected')
+% pause;
+% map = Data001;
+% map = map(2:end,:)-map(1,:);
 
 % Random case study
-% map = randi([-10 10],n.u,2);
-% load('parma8users');
-% params.mapb = parma8users;
+map = randi([-10 10],n.u,2);
+load('parma8users');
+params.mapb = parma8users;
 
 clear Data001
 

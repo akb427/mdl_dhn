@@ -1,26 +1,24 @@
 function [pairs, users2] = pair_pts(users)
-%pair_pts  One-line summary of what the function does.
+%pair_pts  Finds valid pairings of midpoints.
 %
 %   [pairs, users2] = PAIR_PTS(users)
 %
 %   DESCRIPTION:
-%   Briefly explain the purpose of the function, what it computes, or how it
-%   fits into the overall workflow. Mention any important assumptions or side
-%   effects (e.g., plotting, modifying global variables, saving files).
+%   Finds all valid pairings of midpoints that do not overlap the users.
+%   Outputs these pairs based off their rows in users.
 %
 %   INPUTS:
-%       users  - Binary matrix of users in midpoints
+%       users   - Binary matrix of users in midpoints
 %
 %   OUTPUTS:
-%       out1 - Description of output 1 (what it represents)
-%       out2 - Description of output 2
-%       ...  - Additional outputs as needed
+%       pairs   - Matrix of all midpoint pairs that don't overlap users.
+%       users2  - Users in the midpoint in the second column of pair.
 %
-%   SEE ALSO: generate_mdpts
+%   SEE ALSO: generate_structure
 
 %% Find valid pairs
 
-% Row of incomplete midpoints
+% Row of midpoints without all users
 num_mdpt = size(users,1);
 idx_mdpt = 1:num_mdpt;
 idx_mdpt = idx_mdpt(~all(users,2));

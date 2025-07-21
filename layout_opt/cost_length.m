@@ -1,59 +1,73 @@
 function [c2, cpairs] = cost_length(mdpts, pairs, params,n)
-%COST_LENGTH  One-line summary of what the function does.
+%COST_LENGTH  Finds the length in all midpoint pairs.
 %
-%   [c2, cpairs] = cost_length(mdpts, pairs, params,n)
+%   [c2, cpairs] = COST_LENGTH(mdpts, pairs, params,n)
 %
 %   DESCRIPTION:
-%   Briefly explain the purpose of the function, what it computes, or how it
-%   fits into the overall workflow. Mention any important assumptions or side
-%   effects (e.g., plotting, modifying global variables, saving files).
+%   Finds the length needed to connect midpoints together. Then finds the
+%   length needed to connect pairs of midpoints together, including
+%   connecting the midpoints to the plant.
 %
 %   INPUTS:
-%       in1  - Description of input 1 (type, format, units if applicable)
-%       in2  - Description of input 2
-%       ...  - Additional inputs as needed
+%       mdpts   - Matrix of midpoint components.
+%       pairs   - Matrix of all midpoint pairs that don't overlap users.
+%       params  - Structure of system parameters.
+%       n       - Structure of system sizings.
 %
 %   OUTPUTS:
-%       out1 - Description of output 1 (what it represents)
-%       out2 - Description of output 2
-%       ...  - Additional outputs as needed
+%       c2      - Vector of total distance cost of pairs
+%       cpairs  - Vector of distances between pairs
 %
-%   EXAMPLE USAGE:
-%       [best_part, results] = my_partition_solver(G, params);
-%
-%   DEPENDENCIES:
-%       List other custom functions this function calls, if any.
-%
-%   SEE ALSO:
-%       RelatedFunction1, RelatedFunction2
+%   SEE ALSO: bnb_length
 
-%%
-mapb = params.mapb;
-map = mapb(2:end,:);
+%% Clean up map
+mapb = params.mapb;         % map with plant
+map = mapb(2:end,:);        % remove plant
+% add NaN for 0 "midpoints"
 mapx = [NaN; map(:,1)];
 mapy = [NaN; map(:,2)];
+% preallocate storage
 c1 = [NaN; zeros(size(mdpts, 1),1)];
-il = n.u+1;
-iu = find(all(mdpts<=n.u,2),1,'last');
+
+%% Initialize solving
+% all midpoints of users
+idx_lower = n.u+1;
+idx_upper = find(all(mdpts<=n.u,2),1,'last');
+
+% midpoints of points
 mdptsac = mdpts;
 mdptsac(mdptsac<=n.u) = 0;
 mdptsac = mdptsac+1;
-%%
-while il<size(mdpts, 1)
-    idx = mdpts(il:iu,:)+1;
-    x = (map(il:iu,1)-mapx(idx)).^2;
-    y = (map(il:iu,2)-mapy(idx)).^2;
-    c1(il+1:iu+1) = sum(sqrt(x+y),2,'omitnan')+sum(c1(mdptsac(il:iu,:)),2,'omitnan');
-    il = iu+1;
-    iu = find(all(mdpts<=iu,2),1,'last');
+
+
+%% Calculate costs
+
+while idx_lower<size(mdpts, 1)
+    % index of component points in the map
+    idx_in_map = mdpts(idx_lower:idx_upper,:)+1;
+    % distance from midpoint to its components
+    x = (map(idx_lower:idx_upper,1)-mapx(idx_in_map)).^2;
+    y = (map(idx_lower:idx_upper,2)-mapy(idx_in_map)).^2;
+    % cost is distance plus the costs of the midpoints
+    c1(idx_lower+1:idx_upper+1) = sum(sqrt(x+y),2,'omitnan')+sum(c1(mdptsac(idx_lower:idx_upper,:)),2,'omitnan');
+    % increment midpoint set
+    idx_lower = idx_upper+1;
+    % midpoints where all components have had cost calculated
+    idx_upper = find(all(mdpts<=idx_upper,2),1,'last');
 end
 
-%%
+%% Apply to pairs
+
+% increment to include plant
 pairs = pairs+1;
+% distance between valid pairs 
 x = (mapb(pairs(:,1),1)-mapb(pairs(:,2),1)).^2;
 y = (mapb(pairs(:,1),2)-mapb(pairs(:,2),2)).^2;
+% cost is distance between pairs plus pair cost
 c2 = sum(sqrt(x+y),2)+c1(pairs(:,2));
+% only distance between pairs
 cpairs = sum(sqrt(x+y),2);
 
+% remove NaN row
 c1 = c1(2:end,:);
 end

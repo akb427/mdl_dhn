@@ -25,21 +25,22 @@ else
     load(struct_file)
 end
 
-%% Map
+%% Map of users and midpoints
 
-% Parma case study
+% Parma case study from map
 % grabit('ParmaMap.jpg');
 % disp('Press enter once points are selected')
 % pause;
 % map = Data001;
 % map = map(2:end,:)-map(1,:);
+% clear Data001
 
-% Random case study
-map = randi([-10 10],n.u,2);
+% Load previous parma user locations
 % load('parma8users');
 % params.mapb = parma8users;
 
-% clear Data001
+% Random case study
+map = randi([-10 10],n.u,2);
 
 [map] = locate_mdpts(mdpts, map, n.u);   % calcualte midpoint locations
 

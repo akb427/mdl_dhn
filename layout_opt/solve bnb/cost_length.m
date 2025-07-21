@@ -6,7 +6,8 @@ function [c2, cpairs] = cost_length(mdpts, pairs, params,n)
 %   DESCRIPTION:
 %   Finds the length needed to connect midpoints together. Then finds the
 %   length needed to connect pairs of midpoints together, including
-%   connecting the midpoints to the plant.
+%   connecting the midpoints to the plant. Performs calculation in blocks
+%   to take advantage of matrix operations
 %
 %   INPUTS:
 %       mdpts   - Matrix of midpoint components.
@@ -24,8 +25,8 @@ function [c2, cpairs] = cost_length(mdpts, pairs, params,n)
 mapb = params.mapb;         % map with plant
 map = mapb(2:end,:);        % remove plant
 % add NaN for 0 "midpoints"
-mapx = [NaN; map(:,1)];
-mapy = [NaN; map(:,2)];
+map_x = [NaN; map(:,1)];
+map_y = [NaN; map(:,2)];
 % preallocate storage
 c1 = [NaN; zeros(size(mdpts, 1),1)];
 
@@ -46,13 +47,13 @@ while idx_lower<size(mdpts, 1)
     % index of component points in the map
     idx_in_map = mdpts(idx_lower:idx_upper,:)+1;
     % distance from midpoint to its components
-    x = (map(idx_lower:idx_upper,1)-mapx(idx_in_map)).^2;
-    y = (map(idx_lower:idx_upper,2)-mapy(idx_in_map)).^2;
+    x = (map(idx_lower:idx_upper,1)-map_x(idx_in_map)).^2;
+    y = (map(idx_lower:idx_upper,2)-map_y(idx_in_map)).^2;
     % cost is distance to connect plus the cost of the new midpoint
     c1(idx_lower+1:idx_upper+1) = sum(sqrt(x+y),2,'omitnan')+sum(c1(mdptsac(idx_lower:idx_upper,:)),2,'omitnan');
     % increment midpoint set
     idx_lower = idx_upper+1;
-    % midpoints where all components have had cost calculated
+    % midpoints where all components have cost calculated
     idx_upper = find(all(mdpts<=idx_upper,2),1,'last');
 end
 
@@ -60,14 +61,12 @@ end
 
 % increment to include plant
 pairs = pairs+1;
-% distance between valid pairs 
+% distance between pair sets
 x = (mapb(pairs(:,1),1)-mapb(pairs(:,2),1)).^2;
 y = (mapb(pairs(:,1),2)-mapb(pairs(:,2),2)).^2;
-% cost is distance between pairs plus pair cost
+% cost is distance between pairs plus second element cost
 c2 = sum(sqrt(x+y),2)+c1(pairs(:,2));
 % only distance between pairs
 cpairs = sum(sqrt(x+y),2);
 
-% remove NaN row
-c1 = c1(2:end,:);
 end

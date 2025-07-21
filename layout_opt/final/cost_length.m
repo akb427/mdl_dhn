@@ -48,7 +48,7 @@ while idx_lower<size(mdpts, 1)
     % distance from midpoint to its components
     x = (map(idx_lower:idx_upper,1)-mapx(idx_in_map)).^2;
     y = (map(idx_lower:idx_upper,2)-mapy(idx_in_map)).^2;
-    % cost is distance plus the costs of the midpoints
+    % cost is distance to connect plus the cost of the new midpoint
     c1(idx_lower+1:idx_upper+1) = sum(sqrt(x+y),2,'omitnan')+sum(c1(mdptsac(idx_lower:idx_upper,:)),2,'omitnan');
     % increment midpoint set
     idx_lower = idx_upper+1;

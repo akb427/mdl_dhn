@@ -3,7 +3,7 @@ clc, clear, close all
 %% Set System Parameters
 
 load('struct8users.mat');
-load('map8users.mat');
+load('map8users.mat', 'map', 'file_version');
 
 params.Ts = 80;
 params.x = 5;
@@ -45,10 +45,10 @@ while dropact>=params.x
 end
 
 %%
-if i==0
+if file_version==0
     filename = ['results_e', num2str(n.u), 'users.mat'];
 else
-    filename = ['results_e', num2str(n.u), 'users',num2str(i),'.mat'];
+    filename = ['results_e', num2str(n.u), 'users',num2str(file_version),'.mat'];
 end
 
 save(filename,'params','e')

@@ -1,6 +1,31 @@
 function [c2, cpairs] = cost_length(mdpts, pairs, params,n)
-%UNTITLED11 Summary of this function goes here
-%   Detailed explanation goes here
+%COST_LENGTH  One-line summary of what the function does.
+%
+%   [c2, cpairs] = cost_length(mdpts, pairs, params,n)
+%
+%   DESCRIPTION:
+%   Briefly explain the purpose of the function, what it computes, or how it
+%   fits into the overall workflow. Mention any important assumptions or side
+%   effects (e.g., plotting, modifying global variables, saving files).
+%
+%   INPUTS:
+%       in1  - Description of input 1 (type, format, units if applicable)
+%       in2  - Description of input 2
+%       ...  - Additional inputs as needed
+%
+%   OUTPUTS:
+%       out1 - Description of output 1 (what it represents)
+%       out2 - Description of output 2
+%       ...  - Additional outputs as needed
+%
+%   EXAMPLE USAGE:
+%       [best_part, results] = my_partition_solver(G, params);
+%
+%   DEPENDENCIES:
+%       List other custom functions this function calls, if any.
+%
+%   SEE ALSO:
+%       RelatedFunction1, RelatedFunction2
 
 %%
 mapb = params.mapb;

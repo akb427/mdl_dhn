@@ -14,14 +14,14 @@
 clc, clear, close all
 pth = pwd;
 addpath(fullfile(pth, 'structure'));
-%% Get System Parameters
-n.u = 8;
+%% Get midpoint stucture
+n.u = 4;
 
 struct_file = sprintf('%sstruct%dusers.mat', fullfile(pth, 'structure\'),n.u);
 if isfile(struct_file)
     load(struct_file)
 else
-    generate_structure(n.u)
+    generate_structure(n.u, struct_file)
     load(struct_file)
 end
 
@@ -36,10 +36,10 @@ end
 
 % Random case study
 map = randi([-10 10],n.u,2);
-load('parma8users');
-params.mapb = parma8users;
+% load('parma8users');
+% params.mapb = parma8users;
 
-clear Data001
+% clear Data001
 
 [map] = locate_mdpts(mdpts, map, n.u);   % calcualte midpoint locations
 

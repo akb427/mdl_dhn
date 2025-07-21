@@ -20,16 +20,16 @@ params.mapb = [0,0; map];
 
 %% Length Minimized Layout
 
-% [l.c_add, l.c_pairs] = cost_length(mdpts, pairs, params, n);         % calculate the length cost of all midpoints
-% [l.tr, l.c_best] = bnb_length(pairs, users_in_node2, l.c_add, n);
-% 
-% if file_version == 0
-%     filename = ['results_l_', num2str(n.u), 'users.mat'];
-% else
-%     filename = ['results_l_', num2str(n.u), 'users',num2str(file_version),'.mat'];
-% end
-% 
-% save(filename,'params', 'l')
+[l.c_add, l.c_pairs] = cost_length(mdpts, pairs, params, n);         % calculate the length cost of all midpoints
+[l.tr, l.c_best] = bnb_length(pairs, users_in_node2, l.c_add, n);
+
+if file_version == 0
+    filename = ['results_l_', num2str(n.u), 'users.mat'];
+else
+    filename = ['results_l_', num2str(n.u), 'users',num2str(file_version),'.mat'];
+end
+
+save(filename,'params', 'l')
 
 %% Enthalpy Drop Minimized Layout
 [e.c_lim,e.c_comp] = cost_enthalpy(mdpts, usersm, pairs, usersp, params,n);         % calculate the length cost of all midpoints

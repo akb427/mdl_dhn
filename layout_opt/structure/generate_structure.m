@@ -1,4 +1,4 @@
-function generate_structure(nu)
+function generate_structure(nu, sv_name)
 %GENERATE_STRUCTURE  Generates all potential network components.
 %
 %   DESCRIPTION:
@@ -8,7 +8,8 @@ function generate_structure(nu)
 %   together.
 %
 %   INPUTS:
-%       nu  - Number of users in the system
+%       nu      - Number of users in the system
+%       sv_name - Save location
 %
 %   DEPENDENCIES: generate_mdpts, pair_pts.
 
@@ -22,7 +23,6 @@ n.u = nu;
 
 %% Save
 
-filename = ['struct', num2str(n.u), 'users'];
-save(filename, 'n','mdpts','users_in_mdpt','pairs','users_in_node2')
+save(sv_name, 'n','mdpts','users_in_mdpt','pairs','users_in_node2')
 
 end

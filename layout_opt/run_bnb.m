@@ -5,6 +5,7 @@ clc, clear, close all
 load('struct8users.mat');
 load('map8users.mat', 'map', 'file_version');
 
+% simulation parameters
 params.Ts = 80;
 params.x = 5;
 params.Ta = -5;
@@ -14,8 +15,8 @@ params.Ds = 0.15;
 params.mI = 20;
 params.p = 971;
 params.cp = 4164;
+% add point for plant
 params.mapb = [0,0; map];
-
 
 %% Length Minimized Layout
 

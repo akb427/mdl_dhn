@@ -1,4 +1,4 @@
-function [c2, tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, params,n)
+function [c_list, tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, params,n)
 %COST_Enthalpy  Finds the losses in all midpoint pairs.
 %
 %   [c2, cpairs] = COST_ENTHALPY(mdpts, pairs, params,n)
@@ -18,8 +18,9 @@ function [c2, tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, p
 %       n       - Structure of system sizings.
 %
 %   OUTPUTS:
-%       c2      - Vector of total loss cost of pairs
-%       tc      - Conditions to be used in bnb_enthalpy
+%       c2      - Vector of total loss cost of pairs.
+%       tc      - Structure of element parameters to be used in
+%                 bnb_enthalpy.
 %
 %   SEE ALSO: bnb_enthalpy
 
@@ -115,6 +116,6 @@ To = mcp./(mcp+hAs)*tc.Tin+hAs./(mcp+hAs)*params.Ta;
 % enthalpy loss
 E = mcp.*(tc.Tin-To);
 % cost is enthalpy loss between pairs plus second element cost
-c2 = sum(E,2)+c1(pairs(:,2));
+c_list = sum(E,2)+c1(pairs(:,2));
 
 end

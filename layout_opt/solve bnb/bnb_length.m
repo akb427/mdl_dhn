@@ -4,9 +4,10 @@ function [tree_best, c_best] = bnb_length(pairs, users_in_node2, c_list, n)
 %   [tree_best, c_best] = BNB_LENGTH(pairs, users_in_node2, c_list, n)
 %
 %   DESCRIPTION:
-%   Briefly explain the purpose of the function, what it computes, or how it
-%   fits into the overall workflow. Mention any important assumptions or side
-%   effects (e.g., plotting, modifying global variables, saving files).
+%   Branch and bound search of all potential network layouts using
+%   predescribed midpoints, with the goal of minimizing overall component
+%   length. Recursively add node pairs to tree until either the tree is
+%   complete or the cost bound is exceeded. 
 %
 %   INPUTS:
 %       pairs   - Matrix of all midpoint pairs that don't overlap users.

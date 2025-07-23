@@ -85,10 +85,10 @@ end
 figure('Name','Prize Graph')
 
 ax(nu) = axes();
-hold(ax(nu));
+hold(ax(nu),'on');
 for idx_set = 1:nu-1
     ax(idx_set) = axes('visible','off');
-    hold(ax(idx_set));
+    hold(ax(idx_set),'on');
 end
 
 %% Legend Positioning

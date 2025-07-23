@@ -1,123 +1,137 @@
-function [trl_ce, trl_cl, tre_ce, tre_cl]=fig_layout(map,tre,trl,mdpts,n,pairs,tc,params)
-%FUNCTION_NAME  One-line summary of what the function does.
+function [e, l] = fig_layout(map, e, l, mdpts, n, pairs, params)
+%FIG_LAYOUT  One-line summary of what the function does.
 %
-%   [out1, out2] = FUNCTION_NAME(in1, in2)
+%   [e, l] = FIG_LAYOUT(map, e, l, mdpts, n, pairs, params)
 %
 %   DESCRIPTION:
 %   
 %
 %   INPUTS:
-%       in1  - Description of input 1 (type, format, units if applicable)
-%       in2  - Description of input 2
+%       map     - Matrix of X and Y coordinates of the users and midpoints.
+%       e       - Structure of enthalpy minimizing results.
+%       l       - Structure of length minimizing results.
+%       mdpts   - Matrix of midpoints described by row.
+%       n       - Structure of problem sizing.
+%       pairs   - Matrix of all midpoint pairs that don't overlap users.
+%       params  - Structure of system parameters.
 %
 %   OUTPUTS:
-%       out1 - Description of output 1 (what it represents)
-%       out2 - Description of output 2
+%       e       - Structure of enthalpy minimizing results.
+%       l       - Structure of length minimizing results.
 %
-%   DEPENDENCIES:
-%
-%   SEE ALSO:
+%   DEPENDENCIES: expand_tree
 
 %% Prepare data
 
-[trl,~] = expand_tree(trl,mdpts,n,0);
-[tre,~] = expand_tree(tre,mdpts,n,0);
+% expand tree
+[l.tr_exp,~] = expand_tree(l.tr,mdpts,n,0);
+[e.tr_exp,~] = expand_tree(e.tr,mdpts,n,0);
+
+% add plant
 map = [0 0; map];
 
-idx = unique(trl);
-n.sl = sum(idx>n.u);
+% nodes in length solution
+l.node_list = unique(l.tr_exp);
+l.map = map(l.node_list+1,:);
+n.sl = sum(l.node_list>n.u);
+
+% calculate enthalpy cost for length solution
 n.s =n.sl;
-mapl = map(idx+1,:);
-[trl_ce, ~] = fincalc_enthalpy(trl,n,params,tc,mdpts,pairs);
+[l.cost_enthalpy, ~] = fincalc_enthalpy(l.tr_exp,n,params,e.c_comp,mdpts,pairs);
 
-idx = unique(tre);
-n.se = sum(idx>n.u);
+% nodes in enthalpy solution
+e.node_list = unique(e.tr_exp);
+e.map = map(e.node_list+1,:);
+n.se = sum(e.node_list>n.u);
+
+% calculate enthalpy cost in enthalpy solution
 n.s = n.se;
-mape = map(idx+1,:);
-[tre_ce, ~] = fincalc_enthalpy(tre,n,params,tc,mdpts,pairs);
+[e.cost_enthalpy, ~] = fincalc_enthalpy(e.tr_exp,n,params,e.c_comp,mdpts,pairs);
 
-x = (map(tre(:,1)+1,1)-map(tre(:,2)+1,1)).^2;
-y = (map(tre(:,1)+1,2)-map(tre(:,2)+1,2)).^2;
-tre_cl = sum(sqrt(x+y),'all');
+%% Calculate length costs
 
-x = (map(trl(:,1)+1,1)-map(trl(:,2)+1,1)).^2;
-y = (map(trl(:,1)+1,2)-map(trl(:,2)+1,2)).^2;
-trl_cl = sum(sqrt(x+y),'all');
+x = (map(e.tr_exp(:,1)+1,1)-map(e.tr_exp(:,2)+1,1)).^2;
+y = (map(e.tr_exp(:,1)+1,2)-map(e.tr_exp(:,2)+1,2)).^2;
+e.cost_length = sum(sqrt(x+y),'all');
 
-idx = unique(sort(trl(trl>n.u)));
-trln = trl;
-for i = 1:numel(idx)
-    trln(trl==idx(i)) = i+n.u;
+x = (map(l.tr_exp(:,1)+1,1)-map(l.tr_exp(:,2)+1,1)).^2;
+y = (map(l.tr_exp(:,1)+1,2)-map(l.tr_exp(:,2)+1,2)).^2;
+l.cost_length = sum(sqrt(x+y),'all');
+
+%% Create graphs
+
+% renumber split nodes
+split_nodes = unique(sort(l.node_list(l.node_list>n.u)));
+l.tr_exp_renum = l.tr_exp;
+for node_type = 1:numel(split_nodes)
+    l.tr_exp_renum(l.tr_exp==split_nodes(node_type)) = node_type+n.u;
 end
+% create graph
+l.G = digraph(l.tr_exp_renum(:,1)+1,l.tr_exp_renum(:,2)+1,[],string(unique(l.tr_exp)));
 
-Ge = digraph(tre(:,1)+1,tre(:,2)+1,[],string(unique(tre)));
-Gl = digraph(trln(:,1)+1,trln(:,2)+1,[],string(unique(trl)));
+% reunumber split nodes
+split_nodes = unique(sort(e.node_list(e.node_list>n.u)));
+e.tr_exp_renum = e.tr_exp;
+for node_type = 1:numel(split_nodes)
+    e.tr_exp_renum(e.tr_exp==split_nodes(node_type)) = node_type+n.u;
+end
+% create graph
+Ge = digraph(e.tr_exp_renum(:,1)+1,e.tr_exp_renum(:,2)+1,[],string(unique(e.tr_exp)));
 
+%% Plot parameters
 
-%% Length minimized
+mkr = {'diamond','o','square'};
+clr = [[0.6350 0.0780 0.1840];[0 0.4470 0.7410];[0.4660 0.6740 0.1880]];
+
+%% Plot length minimized
+
+% create figure
 figure('Name','Length')
-tiledlayout(2,1)
 set(gcf,'Position',[801,1325,523,229])
 hold on
 
-mkr = {'diamond','o','square'};
-idx = [1,repelem(3,n.u),repelem(2,n.sl)];
-clr = [[0.6350 0.0780 0.1840];[0 0.4470 0.7410];[0.4660 0.6740 0.1880]];
+% node types
+idx_nodes = [1,repelem(3,n.u),repelem(2,n.sl)];
 
-for i =1:3
-    plot(nan, nan,'Marker',mkr(i),'MarkerFaceColor', clr(i,:),'MarkerEdgeColor', clr(i,:),'LineStyle','none')
+% dummy plot for legend
+for node_type =1:3
+    plot(nan, nan,'Marker',mkr(node_type),'MarkerFaceColor', clr(node_type,:),'MarkerEdgeColor', clr(node_type,:),'LineStyle','none')
 end
 L = legend('Plant\quad', 'Node\quad', 'User','AutoUpdate','off','FontSize',11,'Location','northeast','interpreter','latex');
 L.ItemTokenSize(1) = 7;
 
-plot(Gl, 'marker', mkr(idx),'XData',mapl(:,1),'YData',mapl(:,2), 'NodeColor', clr(idx,:), 'EdgeColor','k','interpreter','latex','NodeFontSize',12,'Linewidth',1,'MarkerSize',7,'ArrowPosition',.7)
+% plot results
+plot(l.G, 'marker', mkr(idx_nodes),'XData',l.map(:,1),'YData',l.map(:,2), 'NodeColor', clr(idx_nodes,:), 'EdgeColor','k','interpreter','latex','NodeFontSize',12,'Linewidth',1,'MarkerSize',7,'ArrowPosition',.7)
 
-% textString = {['Length Cost =', num2str(trl_cl,'%.2e'), ' m'],['Loss Cost = ' num2str(trl_ce,'%.2e') ' W']};
-% tl = annotation('textbox');
-% tl.Interpreter = 'Latex';
-% tl.String = textString;
-% tl.Position = [0.137508028259473,0.137954033745666,0.166167487681639,0.095379299587674];
-% tl.FitBoxToText = 'on';
-% tl.BackgroundColor = 'w';
-
-
-%title('Length Minimized Layout')
+% plot settings
 xlim([-800 50])
 ylim([-150 250])
 xlabel('(m)')
 ylabel('(m)')
 ax = gca;
-box on; grid on; grid minor
 ax.GridLineWidth = .85;
 ax.MinorGridLineWidth = 0.5;
-hold off
+box on; grid on; grid minor; hold off
 
-%% Enthalpy minimized
+%% Plot enthalpy minimized
+
+% create figure
 figure('Name','Enthalpy')
-tiledlayout(2,1)
 set(gcf,'Position',[801,1325,523,229])
 hold on
 
-idx = [1,repelem(3,n.u),repelem(2,n.se)];
-plot(Ge, 'marker', mkr(idx),'XData',mape(:,1),'YData',mape(:,2), 'NodeColor', clr(idx,:), 'EdgeColor','k','interpreter','latex','NodeFontSize',12,'Linewidth',1,'MarkerSize',7,'ArrowPosition',.7)
+% plot results
+idx_nodes = [1,repelem(3,n.u),repelem(2,n.se)];
+plot(Ge, 'marker', mkr(idx_nodes),'XData',e.map(:,1),'YData',e.map(:,2), 'NodeColor', clr(idx_nodes,:), 'EdgeColor','k','interpreter','latex','NodeFontSize',12,'Linewidth',1,'MarkerSize',7,'ArrowPosition',.7)
 
-% textString = {['Length Cost = ' num2str(tre_cl,'%.2e') ' m'],['Loss Cost = ' num2str(tre_ce,'%.2e') ' W']};
-% te = annotation('textbox');
-% te.Interpreter = 'Latex';
-% te.Position = [0.589017341040462,0.137954033745666,0.166167487681639,0.095379299587674];
-% te.FitBoxToText = 'on';
-% te.String = textString;
-% te.BackgroundColor = 'w';
-
-%title('Loss Minimized Layout')
+% plot settings
 xlim([-800 50])
 ylim([-150 250])
 xlabel('(m)')
 ylabel('(m)')
 ax = gca;
-box on; grid on; grid minor
 ax.GridLineWidth = .85;
 ax.MinorGridLineWidth = 0.5;
-hold off
+box on; grid on; grid minor; hold off
 
 end

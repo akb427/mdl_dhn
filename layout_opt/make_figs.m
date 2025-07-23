@@ -1,9 +1,9 @@
-%make_figs  One-line summary of what the function does.
+%make_figs  Creates figures for layout optimization paper.
 %
 %   DESCRIPTION:
 %   
 %
-%   DEPENDENCIES: fig_spltnds, 
+%   DEPENDENCIES: fig_spltnds, fig_graph,
 %
 %   SEE ALSO: layoutopt_runner
 
@@ -13,14 +13,7 @@
 clc, clear, close all
 pth = pwd;
 addpath(fullfile(pth, 'figures'));
-
-%% Example Graph
-
-nex.k = 16;
-nex.u = 6;
-nex.s = 1;
-nex.p = 6*nex.u;
-Gex = digraph([1 2 3 4 8 8 6],[2 3 4 8 5 6 7] ,[],string(0:nex.u+nex.s));
+addpath(fullfile(pth, 'solveBnB'));
 
 %% Load Results
 
@@ -30,14 +23,24 @@ load(pth+"\case study\map8users.mat",'map');
 load(pth+"\case study\results_l_8users1.mat", 'l', 'params');
 load(pth+"\case study\results_e_8users1.mat", 'e');
 
-%% Plot
+%% Example Graph
+
+nex.k = 16;
+nex.u = 6;
+nex.s = 1;
+nex.p = 6*nex.u;
+Gex = digraph([1 2 3 4 8 8 6],[2 3 4 8 5 6 7] ,[],string(0:nex.u+nex.s));
+
+fig_graph(Gex, nex) 
+
+%% Plot Illustrative plots
 
 fig_spltnds
-fig_graph(Gex, nex)
-fig_map(map, n);
 fig_congraph(pth);
 
 %% Optimization Results
 
-[trl_ce, trl_cl, tre_ce, tre_cl] = fig_layout(map, e.tr, l.tr, mdpts, n, pairs, e.c_comp, params);
-prrd_e = (trl_ce-tre_ce)/trl_ce
+fig_map(map, n);
+
+[e,l] = fig_layout(map, e, l, mdpts, n, pairs, params);
+prrd_e = (l.cost_enthalpy-e.cost_enthalpy)/l.cost_enthalpy;

@@ -24,6 +24,7 @@ clc, clear, close all
 pth = pwd;
 addpath(fullfile(pth, 'structure'));
 addpath(fullfile(pth, 'solveBnB'));
+addpath(fullfile(pth, 'case study'));
 
 %% System Parameters
 

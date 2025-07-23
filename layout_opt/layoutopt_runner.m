@@ -81,8 +81,8 @@ while dropact>=params.x
     % calculate the enthalpy cost and relavent parameters of all midpoints
     [e.c_list, e.c_comp] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, params, n);
     [e.tr, e.c_best] = bnb_enthalpy(pairs, users_in_node2, e.c_list, n, mdpts, params, e.c_comp);
-    [e.tr,n] = expand_tree(e.tr, mdpts, n, 0);
-    [dE, dropact] = fincalc_enthalpy(e.tr, n, params, e.c_comp, mdpts, pairs);
+    [tr_exp,n] = expand_tree(e.tr, mdpts, n, 0);
+    [dE, dropact] = fincalc_enthalpy(tr_exp, n, params, e.c_comp, mdpts, pairs);
 end
 
 % Save results

@@ -1,11 +1,25 @@
 function [trl_ce, trl_cl, tre_ce, tre_cl]=fig_layout(map,tre,trl,mdpts,n,pairs,tc,params)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%FUNCTION_NAME  One-line summary of what the function does.
+%
+%   [out1, out2] = FUNCTION_NAME(in1, in2)
+%
+%   DESCRIPTION:
+%   
+%
+%   INPUTS:
+%       in1  - Description of input 1 (type, format, units if applicable)
+%       in2  - Description of input 2
+%
+%   OUTPUTS:
+%       out1 - Description of output 1 (what it represents)
+%       out2 - Description of output 2
+%
+%   DEPENDENCIES:
+%
+%   SEE ALSO:
 
+%% Prepare data
 
-%%
-
-addpath("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Project Codes\Layout Optimization")
 [trl,~] = expand_tree(trl,mdpts,n,0);
 [tre,~] = expand_tree(tre,mdpts,n,0);
 map = [0 0; map];
@@ -21,8 +35,6 @@ n.se = sum(idx>n.u);
 n.s = n.se;
 mape = map(idx+1,:);
 [tre_ce, ~] = fincalc_enthalpy(tre,n,params,tc,mdpts,pairs);
-
-prrd_e = (trl_ce-tre_ce)/trl_ce
 
 x = (map(tre(:,1)+1,1)-map(tre(:,2)+1,1)).^2;
 y = (map(tre(:,1)+1,2)-map(tre(:,2)+1,2)).^2;

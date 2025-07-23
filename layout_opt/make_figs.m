@@ -27,16 +27,17 @@ Gex = digraph([1 2 3 4 8 8 6],[2 3 4 8 5 6 7] ,[],string(0:nex.u+nex.s));
 pth = pwd;
 load(pth+"\structure\struct8users.mat", 'mdpts', 'n', 'pairs');
 load(pth+"\case study\map8users.mat",'map');
-load(pth+"\case study\results_l_8users1.mat", 'l');
+load(pth+"\case study\results_l_8users1.mat", 'l', 'params');
 load(pth+"\case study\results_e_8users1.mat", 'e');
 
 %% Plot
 
 fig_spltnds
-%fig_graph(Gex, nex)
+fig_graph(Gex, nex)
 fig_map(map, n);
 fig_congraph(pth);
 
 %% Optimization Results
 
 [trl_ce, trl_cl, tre_ce, tre_cl] = fig_layout(map, e.tr, l.tr, mdpts, n, pairs, e.c_comp, params);
+prrd_e = (trl_ce-tre_ce)/trl_ce

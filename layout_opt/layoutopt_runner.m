@@ -38,7 +38,7 @@ params.mapb = importdata('parma8users.mat');
 % plant at (0,0)
 map = params.mapb(2:end,:)-params.mapb(1,:);
 
-%% Generate Layouts
+%% Generate Layout
 
 % either load or create and then load structure
 struct_file = sprintf('%sstruct%dusers.mat', fullfile(pth, 'structure\'), n.u);

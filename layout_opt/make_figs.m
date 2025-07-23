@@ -1,12 +1,14 @@
 %make_figs  Creates figures for layout optimization paper.
 %
 %   DESCRIPTION:
-%   
+%   Used to plot the figures for the layout optimization paper. Plots the 6
+%   user sample graph, the 2 illustrative figures of the prize sets and
+%   split node types, and plots to compare the results between the two
+%   optimization objectives.
 %
-%   DEPENDENCIES: fig_spltnds, fig_graph,
+%   DEPENDENCIES: fig_graph, fig_spltnds, fig_congraph, fig_map, fig_layout
 %
 %   SEE ALSO: layoutopt_runner
-
 
 %% Initialize workspace
 

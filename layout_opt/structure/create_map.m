@@ -14,6 +14,7 @@
 clc, clear, close all
 pth = pwd;
 addpath(fullfile(pth, 'structure'));
+
 %% Get midpoint stucture
 n.u = 4;
 

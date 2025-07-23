@@ -32,17 +32,17 @@ end
 save(filename,'params', 'l')
 
 %% Enthalpy Drop Minimized Layout
-[e.c_lim,e.c_comp] = cost_enthalpy(mdpts, usersm, pairs, usersp, params,n);         % calculate the length cost of all midpoints
-[e.tr, e.c_best] = bnb_enthalpy(pairs,usersp,e.c_lim,n,mdpts,params,e.c_comp,l.tr);
+[e.c_lim,e.tc] = cost_enthalpy(mdpts, usersm, pairs, usersp, params,n);         % calculate the length cost of all midpoints
+[e.tr, e.c_best] = bnb_enthalpy(pairs,usersp,e.c_lim,n,mdpts,params,e.tc,l.tr);
 [tre,ne] = expand_tree(e.tr, mdpts, n, 0);
-[~, dropact] = fincalc_enthalpy(tre,ne,params,e.c_comp,mdpts,pairs);
+[~, dropact] = fincalc_enthalpy(tre,ne,params,e.tc,mdpts,pairs);
 
 while dropact>=params.x
     params.x = dropact+1;
-    [e.c_add,e.c_comp] = cost_enthalpy(mdpts, usersm, pairs, usersp, params,n);         % calculate the length cost of all midpoints
-    [tre, e.c_best] = bnb_enthalpy(pairs,usersp,e.c_lim,n,mdpts,params,e.c_comp,tre);
+    [e.c_add,e.tc] = cost_enthalpy(mdpts, usersm, pairs, usersp, params,n);         % calculate the length cost of all midpoints
+    [tre, e.c_best] = bnb_enthalpy(pairs,usersp,e.c_lim,n,mdpts,params,e.tc,tre);
     [e.tr,ne] = expand_tree(tre, mdpts, n,0);
-    [~, dropact] = fincalc_enthalpy(e.tr,ne,params,e.c_comp,mdpts,pairs);
+    [~, dropact] = fincalc_enthalpy(e.tr,ne,params,e.tc,mdpts,pairs);
 end
 
 %%

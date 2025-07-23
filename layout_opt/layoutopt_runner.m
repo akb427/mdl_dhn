@@ -1,21 +1,10 @@
-%FUNCTION_NAME  One-line summary of what the function does.
+%LAYOUTOPT_RUNNER  Finds optimal layout of users.
 %
-%   [out1, out2] = FUNCTION_NAME(in1, in2)
+%   DESCRIPTION: Finds the length and energy reducing layouts of the users
+%   in parma8users.mat. Saves the results
 %
-%   DESCRIPTION:
-%   
-%
-%   INPUTS:
-%       in1  - Description of input 1 (type, format, units if applicable)
-%       in2  - Description of input 2
-%
-%   OUTPUTS:
-%       out1 - Description of output 1 (what it represents)
-%       out2 - Description of output 2
-%
-%   DEPENDENCIES:
-%
-%   SEE ALSO:
+%   DEPENDENCIES: generate_structure, locate_mdpts, cost_length,
+%   bnb_length, cost_enthalpy, bnb_enthalpy, expand_tree, fincalc_enthalpy
 
 %% Initialize run
 clc, clear, close all
@@ -90,10 +79,10 @@ dropact = params.x;
 while dropact>=params.x
     params.x = dropact;
     % calculate the enthalpy cost and relavent parameters of all midpoints
-    [e.c_lim,e.tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, params,n);         % calculate the length cost of all midpoints
-    [e.tr, e.c_best] = bnb_enthalpy(pairs,users_in_node2,c,n,mdpts,params,tc);
-    [tre,n] = expand_tree(tre, mdpts, n,0);
-    [dE, dropact] = fincalc_enthalpy(tre,n,params,tc,mdpts,pairs);
+    [e.c_list, e.tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node2, params, n);
+    [e.tr, e.c_best] = bnb_enthalpy(pairs, users_in_node2, e.c_list, n, mdpts, params, e.tc);
+    [e.tr,n] = expand_tree(e.tr, mdpts, n, 0);
+    [dE, dropact] = fincalc_enthalpy(e.tr, n, params, e.tc, mdpts, pairs);
 end
 
 % Save results

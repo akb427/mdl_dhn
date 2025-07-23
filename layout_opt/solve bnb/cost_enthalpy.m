@@ -19,8 +19,7 @@ function [c_list, tc] = cost_enthalpy(mdpts, users_in_mdpt, pairs, users_in_node
 %
 %   OUTPUTS:
 %       c2      - Vector of total loss cost of pairs.
-%       tc      - Structure of element parameters to be used in
-%                 bnb_enthalpy.
+%       tc      - Structure of element parameters.
 %
 %   SEE ALSO: bnb_enthalpy
 

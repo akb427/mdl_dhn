@@ -1,4 +1,19 @@
+%make_figs  One-line summary of what the function does.
+%
+%   DESCRIPTION:
+%   
+%
+%   DEPENDENCIES: fig_spltnds, 
+%
+%   SEE ALSO: layoutopt_runner
+
+
+%% Initialize workspace
+
 clc, clear, close all
+pth = pwd;
+addpath(fullfile(pth, 'figures'));
+
 %% Example Graph
 
 nex.k = 16;
@@ -9,14 +24,13 @@ Gex = digraph([1 2 3 4 8 8 6],[2 3 4 8 5 6 7] ,[],string(0:nex.u+nex.s));
 
 %% Load Results
 
-load("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Project Codes\Layout Optimization\struct8users.mat");
-load("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Project Codes\Layout Optimization\map8users.mat");
-load("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Project Codes\Layout Optimization\results_l_8users1.mat");
-load("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Project Codes\Layout Optimization\results_e_8users1.mat");
+pth = pwd;
+load(pth+"\structure\struct8users.mat", 'mdpts', 'n', 'pairs');
+load("\case study\map8users.mat",'map');
+load("\case study\results_l_8users1.mat", 'l');
+load("\case study\results_e_8users1.mat", 'e');
+
 %% Plot
-set(groot,'defaultAxesTickLabelInterpreter','latex');  
-set(groot,'defaulttextinterpreter','latex');
-set(groot,'defaultLegendInterpreter','latex');
 
 fig_spltnds
 %fig_graph(Gex, nex)
@@ -25,9 +39,4 @@ fig_congraph;
 
 %% Optimization Results
 
-[trl_ce, trl_cl, tre_ce, tre_cl]=fig_layout(map,e.tr, l.tr,mdpts,n,pairs,e.c_comp,params);
-
-%% Reset plot settings
-set(groot,'defaultAxesTickLabelInterpreter','tex');  
-set(groot,'defaulttextinterpreter','tex');
-set(groot,'defaultLegendInterpreter','tex');
+[trl_ce, trl_cl, tre_ce, tre_cl] = fig_layout(map, e.tr, l.tr, mdpts, n, pairs, e.c_comp, params);

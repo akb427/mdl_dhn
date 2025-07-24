@@ -1,7 +1,7 @@
 clc; clear; close all
 
 LS = struct(load("C:\Users\akb42\OneDrive - The Ohio State University\DistrictHeatingNetwork\Data\ThM_params.mat"));
-[pipes, v] = pipe_params(0);
+[pipes, v] = pipe_params(pth,0);
 LS.V_pipes = pipes.V;
 % LS.inc = v.inc;
 % LS.a1 = v.a1;

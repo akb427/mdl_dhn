@@ -23,6 +23,8 @@ clc; clear; close all
 pth = string(pwd);
 pth_data = pth+filesep+"data"+filesep;
 
+addpath(fullfile(pth, 'figures'));
+
 %% System parameters;
 
 LS = struct(load(pth_data+"ThM_params.mat"));
@@ -32,77 +34,46 @@ LS.V_pipes = pipes.V;
 %% Data for Both Thermal Masses
 
 % First data set
-d1 = readtable(pth_data+"pid1_Processed.csv");
-d1_p1 = readtable(pth_data+"pid1_Peltier1");
-d1_p2 = readtable(pth_data+"pid1_Peltier2");
+data1.dhn = readtable(pth_data+"pid1_Processed.csv");
+data1.pelt1 = readtable(pth_data+"pid1_Peltier1");
+data1.pelt2 = readtable(pth_data+"pid1_Peltier2");
 
 % Second data set
-d2 = readtable(pth_data+"pid2_Processed.csv");
-d2_p1 = readtable(pth_data+"pid2_Peltier1");
-d2_p2 = readtable(pth_data+"pid2_Peltier2");
+data2.dhn = readtable(pth_data+"pid2_Processed.csv");
+data2.pelt1 = readtable(pth_data+"pid2_Peltier1");
+data2.pelt2 = readtable(pth_data+"pid2_Peltier2");
 
 %% Process & Combine Collected Data
 
-% trim time in data set 1
-time_rm1 = 31794;
-d1(d1.Time>time_rm1,:) = [];
-d1_p1(d1_p1.Time>time_rm1,:) = [];
-d1_p2(d1_p2.Time>time_rm1,:) = [];
+% Combine the data into one set
+time_rm = [0 31794; 33 31402];
+data = combine_data(data1,data2,time_rm);
 
-% trim time in data set 2
-time_rm2_upper = 31402;
-time_rm2_lower = 33;
-d2(d2.Time>time_rm2_upper,:) = [];
-d2_p1(d2_p1.Time>time_rm2_upper,:) = [];
-d2_p2(d2_p2.Time>time_rm2_upper,:) = [];
-d2(d2.Time<time_rm2_lower,:) = [];
-d2_p1(d2_p1.Time<time_rm2_lower,:) = [];
-d2_p2(d2_p2.Time<time_rm2_lower,:) = [];
-
-% time offset for combination
-d2.Time = d2.Time+time_rm1+1-time_rm2_lower;
-d2_p1.Time = d2_p1.Time+time_rm1+1-time_rm2_lower;
-d2_p2.Time = d2_p2.Time+time_rm1+1-time_rm2_lower;
-
-% combine data into 1 vector
-d = [d1; d2];
-d_p1 = [d1_p1; d2_p1];
-d_p2 = [d1_p2; d2_p2];
-% interpolate peltier data
-d.Q1 = interp1(d_p1.Time, d_p1.Power*0.79, d.Time);
-d.Q2 = interp1(d_p2.Time, d_p2.Power*0.79, d.Time);
 % convert units and filter
-d = convertUnits(d,LS.p);
-df = filtdata(d);
+data.dhn = convertUnits(data.dhn, LS.p);
+data.dhn_filt = clean_data(data.dhn);
 
-% split into calibration and validation
-n = floor(height(d)/2);
-dcal = d(1:n,:);
-dval = df(n+1:end,:);
-dval.Time = dval.Time-dval.Time(1);
-L1 = 1-mean(dcal.M_Supply2./dcal.M_Heater);
+% split 50/50 into calibration and validation
+n = floor(height(data.dhn)/2);
+data_cal = data.dhn(1:n,:);
+data_val = data.dhn_filt(n+1:end,:);
+data_val.Time = data_val.Time-data_val.Time(1);
+L1 = 1-mean(data_cal.M_Supply2./data_cal.M_Heater);
 
 %% Optimize parameters
-cal_file = pth_data+filesep+"phAS_caldata.mat";
+cal_file = pth_data+"phAS_caldata.mat";
 if isfile(cal_file)
-
+    load(cal_file,"optall")
 else
-load(')
-% opts = optimoptions('fmincon','MaxFunctionEvaluations',60000);
-% f = @(x)sim_pid(x,dcal,LS,0);
-% [optall2, emin1(1)] = fmincon(f,optall,[],[],[],[],zeros(18,1),100*ones(18,1),[],opts);
-%[err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall2,dcal,LS,0);
-%optall2(1:2) = optall(1:2);
-[~, y, ~, ~, m, an] = sim_pid(optall,dval,LS,1,L1);
+    opts = optimoptions('fmincon','MaxFunctionEvaluations',60000);
+    f = @(x)sim_pid(x,data_cal,LS,0);
+    [optall2, emin1(1)] = fmincon(f,pipes.hAs,[],[],[],[],zeros(18,1),100*ones(18,1),[],opts);
+    [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall2,data_cal,LS,0);
+    optall2(1:2) = optall(1:2);
+end
+[~, y, ~, ~, m, an] = sim_pid(optall,data_val,LS,1,L1);
 %% Plot Results
-set(groot,'defaultAxesTickLabelInterpreter','latex');  
-set(groot,'defaulttextinterpreter','latex');
-set(groot,'defaultLegendInterpreter','latex');
 
 % figPID_can(dval,y,m)
-figPID_art(dval,y,m)
+figPID_art(data_val,y,m)
 % figExp(d,n);
-
-set(groot,'defaultAxesTickLabelInterpreter','tex');  
-set(groot,'defaulttextinterpreter','tex');
-set(groot,'defaultLegendInterpreter','tex');

@@ -52,11 +52,13 @@ data = combine_data(data1,data2,time_rm);
 % convert units and filter
 data.dhn = convertUnits(data.dhn, LS.p);
 data.dhn_filt = clean_data(data.dhn);
+% plot filtered data
+% fig_dim(data.dhn_filt)
 
 % split 50/50 into calibration and validation
-n = floor(height(data.dhn)/2);
-data_cal = data.dhn(1:n,:);
-data_val = data.dhn_filt(n+1:end,:);
+idx_split = floor(height(data.dhn)/2);
+data_cal = data.dhn(1:idx_split,:);
+data_val = data.dhn_filt(idx_split+1:end,:);
 data_val.Time = data_val.Time-data_val.Time(1);
 L1 = 1-mean(data_cal.M_Supply2./data_cal.M_Heater);
 
@@ -78,8 +80,8 @@ end
 params_plot.fn = 10;
 params_plot.pos = [320,230,461,320];
 
-n = size(data_val,1);
-params_plot.simt = (1:n)/(60*60);
+n_val = size(data_val,1);
+params_plot.simt = (1:n_val)/(60*60);
 data_val.Time_hr = data_val.Time/(60*60);
 
 % Combine data
@@ -88,12 +90,15 @@ d_act = [data_val.T_Supply2 data_val.T_ByIn1 data_val.T_HxIn1 data_val.T_HxOut1 
 
 %% Plot All Results for Troubleshooting
 params_plot.fn = 12;
+params_plot.ln_sty = ["-" ":" "--" "-."];
+params_plot.clr = lines(7);
 params_plot.pos = [320,150,725,400];
 params_plot.ylim = [18 40];
-figPID_all(data_val,d_act,d_sim,params_plot)
+
+%figPID_all(data_val,d_act,d_sim,params_plot)
 
 %% Results Figures
-params_plot.num_panel = 2;
+params_plot.num_panel = 1;
 
 % Thermal Mass results
 if params_plot.num_panel == 2
@@ -123,7 +128,9 @@ if params_plot.num_panel==1
 end
 figPID_mdot(data_val,m_sim,params_plot)
 
-%%
-% plot filtered data
-%fig_dim(data.dhn_filt)
-% figExp(d,n);
+%% Plot profile used for experiment
+params_plot.ln = 1;
+params_plot.pos = [320,230,461,320];
+params_plot.ylim = [0 .1];
+params_plot.xlim = [0 d.Time(end)];
+figExp(data.dhn,idx_split, params_plot);

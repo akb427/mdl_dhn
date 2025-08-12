@@ -1,7 +1,16 @@
 function fig_dim(d)
-%UNTITLED9 Summary of this function goes here
-%   Detailed explanation goes here
-%%
+%FIG_DIM  Plots the experimental data by data type.
+%
+%   FIG_DIM(d)
+%
+%   DESCRIPTION:
+%   Plots four figures showing experimental data: network temperatures,
+%   mass flow rates, thermal mass temps, and pressures. 
+%
+%   INPUTS:
+%       d   - Table of experimental data.
+
+%% Temperature plot
 T_pipes = [d.T_PumpIn d.T_Heater d.T_HeaterOut d.T_ByIn1 d.T_HxIn1 d.T_HxOut1 d.T_ByOut1 d.T_Supply2 d.T_ByIn2 d.T_HxIn2 d.T_HxOut2 d.T_ByOut2 d.T_Return2];
 
 figure('Name', 'Temp')
@@ -56,7 +65,7 @@ plot(d.Time,d.T_ThM2)
 ylabel('Temperature [$^{\circ}$C]')
 ylim([15 30])
 
-legend('Ambient','Supply','ThM','Peltier', 'location', 'southeast')
+legend('Ambient','Supply','ThM', 'location', 'southeast')
 xlabel('Time [s]')
 xlim([0 63197])
 subtitle('ThM2')

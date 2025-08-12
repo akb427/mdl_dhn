@@ -126,8 +126,4 @@ figPID_mdot(data_val,m_sim,params_plot)
 %%
 % plot filtered data
 %fig_dim(data.dhn_filt)
-
-% figPID_can(data_val,y,m)
-
-figPID_art(data_val,d_act,d_sim,m_sim,params_plot)
 % figExp(d,n);

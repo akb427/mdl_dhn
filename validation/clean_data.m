@@ -36,9 +36,6 @@ data_filt.V_ThM2(data_filt.V_ThM2<0)=0;
 data_filt.V_ThM1(data_filt.V_ThM1>100)=100;
 data_filt.V_ThM2(data_filt.V_ThM2>100)=100;
 
-% plot filtered data
-fig_dim(data_filt)
-
 %% Filter additional inputs
 
 if nargin>1

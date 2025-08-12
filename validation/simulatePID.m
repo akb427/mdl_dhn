@@ -71,9 +71,63 @@ else
     [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall2,data_cal,LS,0);
     optall2(1:2) = optall(1:2);
 end
-[~, y, ~, ~, m, an] = sim_pid(optall,data_val,LS,1,L1);
-%% Plot Results
+[~, d_sim, ~, ~, m_sim, an] = sim_pid(optall,data_val,LS,1,L1);
 
-% figPID_can(dval,y,m)
-figPID_art(data_val,y,m)
+%% Plot settings
+
+params_plot.fn = 10;
+params_plot.pos = [320,230,461,320];
+
+n = size(data_val,1);
+params_plot.simt = (1:n)/(60*60);
+data_val.Time_hr = data_val.Time/(60*60);
+
+% Combine data
+d_act = [data_val.T_Supply2 data_val.T_ByIn1 data_val.T_HxIn1 data_val.T_HxOut1 data_val.T_ByOut1 data_val.T_ByIn2...
+    data_val.T_HxIn2 data_val.T_HxOut2 data_val.T_ByOut2 data_val.T_Return2 data_val.T_PumpIn data_val.T_ThM1 data_val.T_ThM2];
+
+%% Plot All Results for Troubleshooting
+params_plot.fn = 12;
+params_plot.pos = [320,150,725,400];
+params_plot.ylim = [18 40];
+figPID_all(data_val,d_act,d_sim,params_plot)
+
+%% Results Figures
+params_plot.num_panel = 2;
+
+% Thermal Mass results
+if params_plot.num_panel == 2
+    params_plot.pos = [320,230,461,320];
+    params_plot.ln = 1;
+    params_plot.ylim = [18 29];
+    params_plot.fn = 10;
+elseif params_plot.num_panel == 1
+    params_plot.pos = [733,257,434,312];
+    params_plot.ln = 2;
+    params_plot.fn = 12;
+end
+figPID_ThM(data_val,d_act,d_sim,params_plot)
+
+% Pipes
+if params_plot.num_panel == 2
+    params_plot.ylim = [34 40];
+    params_plot.pos = [320,230,461,420];
+end
+figPID_pipes(data_val,d_act,d_sim,params_plot)
+
+% Mass flow
+params_plot.ylim = [-.002 0.03];
+if params_plot.num_panel==1
+    params_plot.ln = 1.5;
+    params_plot.xlim = [1.5e4, 2.5e4];
+end
+figPID_mdot(data_val,m_sim,params_plot)
+
+%%
+% plot filtered data
+%fig_dim(data.dhn_filt)
+
+% figPID_can(data_val,y,m)
+
+figPID_art(data_val,d_act,d_sim,m_sim,params_plot)
 % figExp(d,n);

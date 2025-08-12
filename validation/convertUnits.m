@@ -1,7 +1,7 @@
 function [d] = convertUnits(d,rho)
-%FUNCTION_NAME  Convert collected units to SI.
+%CONVERTUNITS  Convert collected units to SI.
 %
-%   [out1, out2] = FUNCTION_NAME(in1, in2)
+%   [d] = CONVERTUNITS(d, rho)
 %
 %   DESCRIPTION:
 %   convert mass flow units from gal/min to kg/s and pressure units from
@@ -22,7 +22,7 @@ idxM = find(contains(names,'M_'));
 idxP = find(contains(names,'P_'));
 
 % Perform conversions
-d{:,idxM} = d{:,idxM}*3.7854/1000*rho/60;                                   % Convert from gal/min to kg/s
-d{:,idxP} = d{:,idxP}*6.895*1000;                                           % Convert from psig to Pa
+d{:,idxM} = d{:,idxM}*3.7854/1000*rho/60;   % Convert from gal/min to kg/s
+d{:,idxP} = d{:,idxP}*6.895*1000;           % Convert from psig to Pa
 
 end

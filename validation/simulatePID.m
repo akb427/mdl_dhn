@@ -132,5 +132,5 @@ figPID_mdot(data_val,m_sim,params_plot)
 params_plot.ln = 1;
 params_plot.pos = [320,230,461,320];
 params_plot.ylim = [0 .1];
-params_plot.xlim = [0 d.Time(end)];
+params_plot.xlim = [0 data.dhn.Time(end)/(60*60)];
 figExp(data.dhn,idx_split, params_plot);

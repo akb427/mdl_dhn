@@ -1,4 +1,4 @@
-function figPID_pipes(d,d_act,d_sim,params_plot)
+function [h]=figPID_pipes(d,d_act,d_sim,params_plot)
 %FIGPID_PIPES  Compare the simulated and actual key pipe temps.
 %
 %   FIGPID_PIPES(d,d_act,d_sim,params_plot)
@@ -18,7 +18,7 @@ function figPID_pipes(d,d_act,d_sim,params_plot)
 
 %% Create figure
 
-figure('Name','Pipes')
+h=figure('Name','Pipes');
 set(gcf,Position=params_plot.pos)
 
 %% Case specific
@@ -31,8 +31,8 @@ switch params_plot.num_panel
         
         nexttile
         hold on
-        plot(d.Time_hr, d_act(:,10),LineWidth=params_plot.ln)
-        plot(params_plot.simt, d_sim(:,10),':',LineWidth=params_plot.ln)
+        plot(d.Time_hr, d_act(:,10),LineWidth=params_plot.ln,Color=params_plot.clr(1,:))
+        plot(params_plot.simt, d_sim(:,10),':',LineWidth=params_plot.ln,Color=params_plot.clr(2,:))
         xlim([0 params_plot.simt(end)])
         ylim(params_plot.ylim)
         set(gca,FontSize=params_plot.fn)
@@ -63,14 +63,14 @@ switch params_plot.num_panel
     % 1 pane Styling
     case 1
         hold on
-        plot(d.Time, d.T_HeaterOut,'k' ,LineWidth=params_plot.ln);
-        plot(1:size(d,1), d_sim(:,10),LineWidth=params_plot.ln)
-        plot(d.Time, d_act(:,10),LineWidth=params_plot.ln)
-
-        legend('$T_{s}$', 'Sim $T_{r}$', 'Act $T_{r}$',FontSize=params_plot.fn)
+        plot(d.Time_hr, d.T_HeaterOut,LineWidth=params_plot.ln,Color='k');
+        plot(d.Time_hr, d_act(:,10),LineWidth=params_plot.ln,Color=params_plot.clr(1,:))
+        plot(params_plot.simt, d_sim(:,10),LineWidth=params_plot.ln,Color=params_plot.clr(2,:),LineStyle="--")
+        
+        legend('$T_{s}$', 'Act $T_{r}$','Sim $T_{r}$', FontSize=params_plot.fn,Location='Northwest')
         ylabel('Temperature (C)',FontSize=params_plot.fn)
-        xlabel('Time (s)',FontSize=params_plot.fn)
-        xlim([1 size(d,1)])
+        xlabel('Time (hr)',FontSize=params_plot.fn)
+        xlim([0 params_plot.simt(end)])
         set(gca, FontSize=params_plot.fn)
         box on; grid on; hold off
 end

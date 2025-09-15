@@ -117,8 +117,12 @@ figPID_ThM(data_val,d_act,d_sim,params_plot)
 if params_plot.num_panel == 2
     params_plot.ylim = [34 40];
     params_plot.pos = [320,230,461,420];
+elseif params_plot.num_panel == 1
+    params_plot.pos = [733,316,393,253];
+    params_plot.ln = 1.2;
 end
-figPID_pipes(data_val,d_act,d_sim,params_plot)
+h=figPID_pipes(data_val,d_act,d_sim,params_plot);
+exportgraphics(h,"Treturn.eps",ContentType="vector")
 
 % Mass flow
 params_plot.ylim = [-.002 0.03];
@@ -127,6 +131,17 @@ if params_plot.num_panel==1
     params_plot.xlim = [1.5e4, 2.5e4];
 end
 figPID_mdot(data_val,m_sim,params_plot)
+
+%% Building-wise
+params_plot.ln = 1.1;
+params_plot.pos = [733,316,393,253];
+params_plot.pos_leg = [0.627236937537036,0.544303348676959,0.207153822749971,0.294940721715391];
+params_plot.ylim = cell(1,2);
+params_plot.ylim{1} = [16 29];
+params_plot.ylim{2} = [-.002 0.035];
+[h1,h2] = figPID_ThMcombined(data_val,d_act,d_sim,m_sim,params_plot);
+exportgraphics(h1,"ThM1_combined.eps",ContentType="vector")
+exportgraphics(h2,"ThM2_combined.eps",ContentType="vector")
 
 %% Plot profile used for experiment
 params_plot.ln = 1;

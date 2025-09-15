@@ -25,7 +25,6 @@ d_p1.Time = d_p1.Time-d.Time(1);
 d_p2.Time = d_p2.Time-d.Time(1);
 d.Time = d.Time-d.Time(1);
 
-
 d = convertUnits(d,LS.p);
 d.Q1 = interp1(d_p1.Time, d_p1.Power*0.79, d.Time);
 d.Q2 = interp1(d_p2.Time, d_p2.Power*0.79, d.Time);
@@ -41,7 +40,6 @@ f = @(x)sim_pid(x,d,LS,0);
 [optall2, emin1(1)] = fmincon(f,optall2,[],[],[],[],zeros(18,1),100*ones(18,1),[],opts);
 [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall2,d,LS,0);
 %[~, y, ~, ~, m, an] = sim_pid(optall2,dval,LS,1,L1);
-
 
 
 %% Plot Results

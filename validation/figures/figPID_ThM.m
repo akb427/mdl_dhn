@@ -30,8 +30,8 @@ switch params_plot.num_panel
         
         nexttile
         hold on
-        plot(d.Time_hr, d_act(:,12),Linewidth=params_plot.ln)
-        plot(params_plot.simt, d_sim(:,12),':',LineWidth=params_plot.ln)
+        plot(d.Time_hr, d_act(:,12),Linewidth=params_plot.ln,Color=params_plot.clr(1,:))
+        plot(params_plot.simt, d_sim(:,12),':',LineWidth=params_plot.ln,Color=params_plot.clr(2,:))
         xlim([0 params_plot.simt(end)])
         ylim(params_plot.ylim)
         set(gca,'FontSize',params_plot.fn)

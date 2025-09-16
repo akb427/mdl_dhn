@@ -26,3 +26,6 @@ Thumbs.db
 # Ignore user-specific settings
 *.prj
 *.settings
+
+# Ignore generated images
+*.eps

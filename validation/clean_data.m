@@ -19,8 +19,6 @@ function [data_filt, pelt1_filt,pelt2_filt] = clean_data(data, pelt1, pelt2)
 %       data_filt   - Table of filted data values.
 %       pelt1_filt  - Table of filted peltier1 values.
 %       pelt2_filt  - Table of filted peltier2 values.
-%
-%   DEPENDENCIES: fig_dim
 
 %% Filter first input
 

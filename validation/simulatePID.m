@@ -30,7 +30,7 @@ addpath(fullfile(pth, 'figures'));
 %% System parameters;
 
 LS = struct(load(pth_data+"ThM_params.mat"));
-[pipes, v] = get_pipe_params(pth_data,0);
+pipes = get_pipe_params(pth_data,0);
 LS.V_pipes = pipes.V;
 
 %% Data for Both Thermal Masses

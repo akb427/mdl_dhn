@@ -69,11 +69,11 @@ if isfile(cal_file)
 else
     opts = optimoptions('fmincon','MaxFunctionEvaluations',60000);
     f = @(x)sim_pid(x,data_cal,LS,0);
-    [optall2, emin1(1)] = fmincon(f,pipes.hAs,[],[],[],[],zeros(18,1),100*ones(18,1),[],opts);
-    [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall2,data_cal,LS,0);
-    optall2(1:2) = optall(1:2);
+    [optall, emin1(1)] = fmincon(f,[1 1 pipes.hAs LS.hAs_cp1 LS.hAs_cp2],[],[],[],[],zeros(18,1),20*ones(18,1),[],opts);
+    [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall,data_cal,LS,0);
 end
-[~, d_sim, ~, ~, m_sim, an] = sim_pid(optall,data_val,LS,1,L1);
+[esim, d_sim, ~, ~, m_sim, an] = sim_pid(optall,data_val,LS,1,L1);
+
 
 %% Plot settings
 

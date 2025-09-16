@@ -106,7 +106,7 @@ y_act = [d.T_Supply2 d.T_ByIn1 d.T_HxIn1 d.T_HxOut1 d.T_ByOut1 d.T_ByIn2 d.T_HxI
 
 % Error Calculation
 e = rmse(y,y_act);
-w = [1 1 10^10 10^10 1 1 1 1 1 1 1 1 1];
+w = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 err = sum(w.*e);
 
 sol.e_y = e;

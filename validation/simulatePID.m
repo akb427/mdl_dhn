@@ -1,21 +1,23 @@
-%FUNCTION_NAME  One-line summary of what the function does.
+%SIMULATEPID  Takes collected data to calibrate and validate model
 %
-%   [out1, out2] = FUNCTION_NAME(in1, in2)
-%
-%   DESCRIPTION:
-%   
+%   DESCRIPTION: Takes the data collected from the lab scale DHN and
+%   uses it to develop a calibrated model of the network. First, it
+%   processes and filters the data. Then, it uses half the data, and the
+%   prescribed pipe parameters to find the optimal proportional gain and
+%   pipe heat transfer coefficients. Plots the results in various graphs.
 %
 %   INPUTS:
-%       in1  - Description of input 1 (type, format, units if applicable)
-%       in2  - Description of input 2
+%       ThM_params.mat      - Physical characterisitics of thermal masses.
+%       pid1_Processed.csv  - DHN data from first experiment.
+%       pid1_Peltier1       - Peltier 1 data from first experiment.
+%       pid1_Peltier2       - Peltier 2 data from first experiment.
+%       pid2_Processed.csv  - DHN data from second experiment.
+%       pid2_Peltier1       - Peltier 1 data from second experiment.
+%       pid2_Peltier2       - Peltier 2 data from second experiment.
 %
-%   OUTPUTS:
-%       out1 - Description of output 1 (what it represents)
-%       out2 - Description of output 2
-%
-%   DEPENDENCIES:
-%
-%   SEE ALSO:
+%   DEPENDENCIES: clean_data, combine_data, get_pipe_params, sim_pid, 
+%   figExp, figPID_ThM, figPID_ThMcombined, figPID_all, figPID_mdot,
+%   figPID_pipes
 
 %% Setup workspace
 
@@ -62,8 +64,8 @@ data_val = data.dhn_filt(idx_split+1:end,:);
 data_val.Time = data_val.Time-data_val.Time(1);
 L1 = 1-mean(data_cal.M_Supply2./data_cal.M_Heater);
 
-%% Optimize parameters
-cal_file = pth_data+"phAS_caldata.mat";
+%% Optimize heat transfer parameters
+cal_file = pth_data+"phAS_calibrated.mat";
 if isfile(cal_file)
     load(cal_file,"optall")
 else
@@ -72,8 +74,9 @@ else
     [optall, emin1(1)] = fmincon(f,[1 1 pipes.hAs LS.hAs_cp1 LS.hAs_cp2],[],[],[],[],zeros(18,1),20*ones(18,1),[],opts);
     [err, y_cal, ~, ~, m_cal, an_cal] = sim_pid(optall,data_cal,LS,0);
 end
-[esim, d_sim, ~, ~, m_sim, an] = sim_pid(optall,data_val,LS,1,L1);
 
+%% Simulate DHN using calibrated parameters and experiment inputs
+[esim, d_sim, ~, ~, m_sim, an] = sim_pid(optall,data_val,LS,1,L1);
 
 %% Plot settings
 
@@ -89,6 +92,7 @@ d_act = [data_val.T_Supply2 data_val.T_ByIn1 data_val.T_HxIn1 data_val.T_HxOut1 
     data_val.T_HxIn2 data_val.T_HxOut2 data_val.T_ByOut2 data_val.T_Return2 data_val.T_PumpIn data_val.T_ThM1 data_val.T_ThM2];
 
 %% Plot All Results for Troubleshooting
+
 params_plot.fn = 12;
 params_plot.ln_sty = ["-" ":" "--" "-."];
 params_plot.clr = lines(7);
@@ -98,6 +102,7 @@ params_plot.ylim = [18 40];
 %figPID_all(data_val,d_act,d_sim,params_plot)
 
 %% Results Figures
+% Different figure layouts depending on use case
 params_plot.num_panel = 1;
 
 % Thermal Mass results
@@ -133,6 +138,7 @@ end
 figPID_mdot(data_val,m_sim,params_plot)
 
 %% Building-wise
+
 params_plot.ln = 1.1;
 params_plot.pos = [733,316,393,253];
 params_plot.pos_leg = [0.627236937537036,0.544303348676959,0.207153822749971,0.294940721715391];
@@ -144,6 +150,7 @@ exportgraphics(h1,"ThM1_combined.eps",ContentType="vector")
 exportgraphics(h2,"ThM2_combined.eps",ContentType="vector")
 
 %% Plot profile used for experiment
+
 params_plot.ln = 1;
 params_plot.pos = [320,230,461,320];
 params_plot.ylim = [0 .1];

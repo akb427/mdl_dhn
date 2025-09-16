@@ -1,20 +1,19 @@
 function [h1,h2]=figPID_ThMcombined(d,d_act,d_sim,m_sim,params_plot)
-%FIGPID_THM  Compare the simulated and actual thermal mass temps.
+%FIGPID_THMcombined  Compare the simulated and actual thermal mass variables.
 %
-%   FIGPID_THM(d,d_act,d_sim,params_plot)
+%   FIGPID_THMcombined(d,d_act,d_sim,m_sim,params_plot)
 %
 %   DESCRIPTION:
-%   Plots either a one pane or two pane figure comparin the thermal mass
-%   temperatures between the simulation and the experimental data. Changes
-%   the number of panels based on params_plot.num_panel. Works to plot two
-%   thermal masses results.
+%   Plots two figures comparing the thermal mass temperatures and mass flow
+%   between the simulation and the experimental data. Has temperature on
+%   the left axis and mass flow on the right.
 %
 %   INPUTS:
 %       d           - Table of experimental data.
 %       d_act       - Matrix of experimental data.
 %       d_sim       - Matrix of simulation data.
+%       m_sim       - Matix of simulation mass flow rates.
 %       params_plot - Structure of plotting parameters.
-
 
 %% ThM 1
 

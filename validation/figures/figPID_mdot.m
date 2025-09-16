@@ -1,18 +1,17 @@
 function figPID_mdot(d,m_sim,params_plot)
-%FIGPID_THM  Compare the simulated and actual key mass flow rates.
+%FIGPID_MDOT  Compare the simulated and actual key mass flow rates.
 %
-%   FIGPID_THM(d,d_act,d_sim,params_plot)
+%   FIGPID_MDOT(d,m_sim,params_plot)
 %
 %   DESCRIPTION:
-%   Plots either a one pane or two pane figure comparin the thermal mass
-%   temperatures between the simulation and the experimental data. Changes
-%   the number of panels based on params_plot.num_panel. Works to plot two
-%   thermal masses results.
+%   Plots either a one pane or two pane figure comparing the mass flow rate
+%   in the thermal masses between the simulation and the experimental data. 
+%   Changes the number of panels based on params_plot.num_panel. Works to 
+%   plot two thermal masses results.
 %
 %   INPUTS:
 %       d           - Table of experimental data.
-%       d_act       - Matrix of experimental data.
-%       d_sim       - Matrix of simulation data.
+%       m_sim       - Matrix of simulated mass flow rates.
 %       params_plot - Structure of plotting parameters.
 
 %% Create figure

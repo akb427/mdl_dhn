@@ -1,6 +1,17 @@
 function figExp(d,nsplit, params_plot)
-%UNTITLED5 Summary of this function goes here
-%   Detailed explanation goes here
+%FIGEXP  Plot the experiment profile used to collect data.
+%
+%   FIGEXP(d,nsplit, params_plot)
+%
+%   DESCRIPTION: Plots the experiment parameters used to run the
+%   simulation. Shows the thermal mass temperature setpoints (hardcoded),  
+%   supply temperature, and simulated ambient temperature. On the right
+%   y-axis, shows the plant mass flow rate. 
+%
+%   INPUTS:
+%       d           - Data from experiment
+%       nsplit      - Split index between training and validation.
+%       params_plot - Structure of plot settings.
 
 %% Load Data
 pth = string(pwd);
@@ -12,8 +23,6 @@ load(pth_data+"LSplan.mat","LS")
 Tset_ThM1 = [zeros(1,15922) 28*ones(1,15873) zeros(1,15441) 28*ones(1,15927)];
 Tset_ThM2 = [28*ones(1,3453) zeros(1,14234) 28*ones(1,17023) zeros(1,14572) 28*ones(1,13881)];
 
-LS.T_ThM1(1,end) = 28;
-LS.T_ThM2(1,end) = 28;
 d.Time = d.Time/(60*60);
 
 

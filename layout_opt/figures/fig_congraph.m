@@ -11,9 +11,9 @@ function fig_congraph(pth)
 %   INPUTS:
 %       pth  - String of folder path
 %
-%   DEPENDENCIES: generate_structure.
+%   DEPENDENCIES: generate_structure
 %
-%   SEE ALSO: pair_pts.
+%   SEE ALSO: pair_pts
 
 %% Generate Layout
 nu = 4;

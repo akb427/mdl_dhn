@@ -3,8 +3,8 @@ function [e, l] = fig_layout(map, e, l, mdpts, n, pairs, params)
 %
 %   [e, l] = FIG_LAYOUT(map, e, l, mdpts, n, pairs, params)
 %
-%   DESCRIPTION:
-%   
+%   DESCRIPTION: Plots the two optimized layouts, length and enthalpy,
+%   includes the cost of both maps for both length and enthalpy.
 %
 %   INPUTS:
 %       map     - Matrix of X and Y coordinates of the users and midpoints.
@@ -19,7 +19,7 @@ function [e, l] = fig_layout(map, e, l, mdpts, n, pairs, params)
 %       e       - Structure of enthalpy minimizing results.
 %       l       - Structure of length minimizing results.
 %
-%   DEPENDENCIES: expand_tree
+%   DEPENDENCIES: expand_tree,fincalc_enthalpy
 
 %% Prepare data
 

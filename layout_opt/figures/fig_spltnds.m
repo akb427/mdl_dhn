@@ -1,7 +1,7 @@
 function fig_spltnds
 %FIG_SPLTNDS  Illustrative plot of split node types.
 %
-%   [out1, out2] = FUNCTION_NAME(in1, in2)
+%   FIG_SPLTNDS
 %
 %   DESCRIPTION: 
 %   Plots a simple node (of only users), complex (of only

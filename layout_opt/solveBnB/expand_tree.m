@@ -12,11 +12,11 @@ function [tree_new,n] = expand_tree(tree, mdpts, n, flag)
 %       tree    - Matrix of tree to be expanded
 %       mdpts   - Matrix of midpoints described by row.
 %       n       - Structure of problem sizing
-%       flag - Binary indicator if split nodes are renumbered ton_u+1:n_u+n_s.
+%       flag    - Binary indicator if split nodes are renumbered ton_u+1:n_u+n_s.
 %
 %   OUTPUTS:
-%       tree_new - Matrix of tree expanded to explicitly include all users.
-%       n       - Structure of problem sizing
+%       tree_new    - Matrix of tree expanded to explicitly include all users.
+%       n           - Structure of problem sizing
 %
 %   SEE ALSO: bnb_enthalpy
 
